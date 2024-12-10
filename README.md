@@ -1,3 +1,35 @@
+# Algorithm_TIN
+
+
+## TINアルゴリズム
+1. TINに含まれるすべての頂点$v$について :
+    
+    * 一時的に頂点 $v$ を削除．
+    * 削除した頂点を除いて，Delaunay三角網を構築．
+    * 新たなTINを用いて，頂点 $v$ の標高誤差 $error(v)$ を計算．
+
+    ソートされた各頂点 $v$ の誤差 $error(v)$ を 平衡二分木(balanced binary tree) $T$ に格納する．$T$ の各ノードは誤差 $error(v)$ とTINの頂点 $v$ へのポインタを保持している．  
+    また頂点 $v$ には，$T$ の対応するノードへのポインタを格納する.
+
+2. $T$ において，最小の $error(v)$ を持つノードについて検討する．もしその $error(v)$ が，設定した最大誤差よりも大きければ，ここでアルゴリズムを終了する．そうでないとき，次のステップへ進む．
+
+3. $error(v)$ を持つ $T$ のノードを削除する．そして対応する頂点 $v$ をTIN構造体から削除する．  
+頂点 $v$ の隣接する頂点を $w_1, w_2, ..., w_j$ とする．そして頂点 $w_1, w_2, ..., w_j$ を用いて，再度ドローネ三角分割を行う．
+
+4. すべての頂点 $w_i \in \{w_1, w_2, ..., w_j\}$ について : 
+
+    * $error(w_i)$ を保持しているノードを $T$ から削除．
+    * Step1で行ったように，頂点 $w_i$ を削除した際の標高誤差 $error(w_i)$ を計算．
+    * 新たに求めた $error(w_i)$ を $T$ に代入．
+
+Step2へ続く  
+
+
+#### 参考文献
+> Marc van Kreveld，Jürg Nievergelt，Thomas Roos，Peter Widmayer (Eds.): Algorithmic Foundations of Geographic Information Systems，Springer，pp．47-50，1997．
+
+
+
 ## ドローネ三角分割(Delaunay Triangulation)
 
 アルゴリズムに関する情報は，[Algorithm_Delaunay](https://github.com/aoken0/Algorithm_Delaunay) を参照．
