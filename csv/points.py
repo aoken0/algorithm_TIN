@@ -1,15 +1,15 @@
 import pandas as pd
 import numpy as np
 
-df = pd.DataFrame(np.empty((6, 4)), columns=['id', 'x', 'y', 'h'])
+num = 300
 
-df['id'] = np.arange(1, 7)
+df = pd.DataFrame(np.empty((num, 4)), columns=['id', 'x', 'y', 'h'])
+
+df['id'] = np.arange(0, num)
 
 rng = np.random.default_rng()
-df['x'] = np.round(rng.uniform(0, 10, 6), 2)
-df['y'] = np.round(rng.uniform(0, 10, 6), 2)
-df['h'] = np.round(rng.uniform(0, 10, 6), 2)
+df['x'] = np.round(rng.uniform(0, 100, num), 2)
+df['y'] = np.round(rng.uniform(0, 100, num), 2)
+df['h'] = np.round(rng.uniform(0, 10, num), 2)
 
-print(df)
-
-df.to_csv('./csv/random_points.csv', index=False)
+df.to_csv(f'./csv/random_{num}points.csv', index=False)
