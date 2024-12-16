@@ -8,7 +8,6 @@ import os
 def grid_to_TIN(df_p: pd.DataFrame, max_error=0.05, output_name=None):
   start = time.time() # 実行時間計算用
   df_old = df_p.copy(deep = True)
-  max_trials = 100
   p_amount = len(df_p) # 点の数
   error = np.full(p_amount, np.inf) # 誤差を格納するためのリスト
 
@@ -16,7 +15,7 @@ def grid_to_TIN(df_p: pd.DataFrame, max_error=0.05, output_name=None):
   # ステップ 1: すべての点について標高誤差を計算(1回目のループ)
   #            それ以降は，削除した点に隣接する点の標高誤差を計算
   # ============================================================  
-  while 1 and (max_trials > 0):
+  while 1:
     for i in range(df_p.shape[0]):
       # 標高誤差がinfとなっている点のみ計算する
       if (error[i] < np.inf): continue
@@ -45,27 +44,27 @@ def grid_to_TIN(df_p: pd.DataFrame, max_error=0.05, output_name=None):
     df_p = df_p.reset_index(drop = True)
     # 標高誤差から削除する点を削除
     error = np.delete(error, del_id)
-
-    max_trials -= 1
   
   print('fin')
   print(time.time() - start, 's')
 
   # output用のフォルダをなければ作成
-  if not os.path.exists(f'./output/{output_name}'):
-    os.makedirs(f'./output/{output_name}')
+  output_path = f'./output/{output_name}/{max_error}'
+  if not os.path.exists(output_path):
+    os.makedirs(output_path)
   
-  triangles = delaunay_triangulation(df_p, plot=True, output_name=f'{output_name}/TIN', return_triangles=True)
+  triangles = delaunay_triangulation(df_p, plot=True, output_name=f'{output_path}/TIN', return_triangles=True)
   triangles = np.array(triangles[0])
 
-  np.savetxt(f'./output/{output_name}/TIN_triangles.csv', triangles, fmt='%d')
-  np.savetxt(f'./output/{output_name}/TIN_points.csv', df_p.to_numpy(), fmt='%f')
+  np.savetxt(f'{output_path}/TIN_triangles.csv', triangles, fmt='%d')
+  np.savetxt(f'{output_path}/TIN_points.csv', df_p.to_numpy(), fmt='%f')
 
 
 if __name__ == '__main__':
   folder = './csv'
   filename = 'grid_400points.csv'
   output_name = filename.split('.')[0]
+  max_error = 0.05
   df_p = pd.read_csv(f'{folder}/{filename}')
-  grid_to_TIN(df_p, max_error=0.05, output_name=output_name)
+  grid_to_TIN(df_p, max_error=max_error, output_name=output_name)
   # TIN_network(df_p, max_error=0.05, output_name=filename)

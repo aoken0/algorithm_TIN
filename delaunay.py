@@ -83,7 +83,7 @@ def plot_network(points, df_p: pd.DataFrame, tri, point=None, output_name=None, 
 
   plt.gca().set_aspect('equal')
   if output_name is not None:
-    plt.savefig(f'./output/{output_name}.png')
+    plt.savefig(f'{output_name}.png')
   plt.show()
 
 
