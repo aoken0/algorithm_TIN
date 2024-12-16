@@ -62,9 +62,9 @@ def grid_to_TIN(df_p: pd.DataFrame, max_error=0.05, output_name=None):
 
 if __name__ == '__main__':
   folder = './csv'
-  filename = 'grid_400points.csv'
+  filename = 'grid_2500points.csv'
+  max_error = 0.1
   output_name = filename.split('.')[0]
-  max_error = 0.05
   df_p = pd.read_csv(f'{folder}/{filename}')
   grid_to_TIN(df_p, max_error=max_error, output_name=output_name)
   # TIN_network(df_p, max_error=0.05, output_name=filename)
