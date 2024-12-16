@@ -2,8 +2,8 @@ import pandas as pd
 import numpy as np
 
 # グリッドのサイズを設定
-x_min, x_max, x_step = 0, 50, 1  # x方向の範囲と間隔
-y_min, y_max, y_step = 0, 50, 1  # y方向の範囲と間隔
+x_min, x_max, x_step = 0, 20, 1  # x方向の範囲と間隔
+y_min, y_max, y_step = 0, 20, 1  # y方向の範囲と間隔
 
 # x, y のグリッドを生成
 x_values = np.arange(x_min, x_max, x_step)
