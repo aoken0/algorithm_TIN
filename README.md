@@ -57,9 +57,9 @@ P_h &= \lambda_1 A_h + \lambda_2 B_h + \lambda_2 C_h \\
 
 ```math
 \begin{align*}
-\lambda_1 &= area(PBC) / area(ABC) \\
-\lambda_2 &= area(APC) / area(ABC) \\
-\lambda_3 &= area(ABP) / area(ABC) \\
+\lambda_1 &=& area(PBC) / area(ABC) \\
+\lambda_2 &=& area(APC) / area(ABC) \\
+\lambda_3 &=& area(ABP) / area(ABC) \\
 \end{align*}
 ```
 
