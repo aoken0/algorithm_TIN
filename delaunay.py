@@ -8,13 +8,16 @@ def delaunay_triangulation(df_p: pd.DataFrame | np.ndarray, point=None, p_num=No
   height = None
   points = None
   data = None
+  heights = None
 
   if (type(df_p) == pd.DataFrame):
     points = df_p[['x', 'y']].to_numpy()
     data = df_p[['x', 'y', 'h']].to_numpy()
+    heights = df_p['h'].to_numpy()
   elif (type(df_p) == np.ndarray):
     points = df_p[:, :2]
     data = df_p
+    heights = df_p[:, 2]
 
   # Delaunay 三角形分割を計算
   tri = Delaunay(points)
@@ -25,11 +28,14 @@ def delaunay_triangulation(df_p: pd.DataFrame | np.ndarray, point=None, p_num=No
     # print(tri.simplices[p]) # 内包されている三角形の頂点番号
     triangle_points = data[tri.simplices[p]]
     if return_height:
-      height = get_height(triangle_points=triangle_points, point=point)
+      if p == -1:
+        height = 2 ** 10
+      else:
+        height = get_height(triangle_points=triangle_points, point=point)
 
   # plotモードのとき
   if plot:
-    plot_network(points=points, df_p=df_p, tri=tri, point=point, output_name=output_name)
+    plot_network(points=points, heights=heights, tri=tri, point=point, output_name=output_name)
   
   return_val = []
 
@@ -57,7 +63,7 @@ def get_adjacent_points(tri: Delaunay, point):
   return points
 
 
-def plot_network(points, df_p: pd.DataFrame, tri, point=None, output_name=None, show_num=False):
+def plot_network(points, heights, tri, point=None, output_name=None, show_num=False):
   # 可視化
   plt.figure(figsize=(8, 6))
 
@@ -68,7 +74,7 @@ def plot_network(points, df_p: pd.DataFrame, tri, point=None, output_name=None, 
     plt.plot(x, y, 'k-')
 
   # 点群をプロット
-  sc = plt.scatter(points[:, 0], points[:, 1], c=df_p['h'], cmap='viridis', marker='o', s=50)
+  sc = plt.scatter(points[:, 0], points[:, 1], c=heights, cmap='viridis', marker='o', s=50)
   plt.colorbar(sc)
 
   # 頂点番号を表示
