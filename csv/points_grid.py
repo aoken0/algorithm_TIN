@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 
 # グリッドサイズ
-n = 100
+n = 150
 
 # グリッドのサイズを設定
 x_min, x_max, x_step = 0, n, 1  # x方向の範囲と間隔

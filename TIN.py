@@ -272,9 +272,13 @@ def get_neighbor_points(reference_points: list, triangles: np.ndarray, neighbor_
 
 if __name__ == '__main__':
   folder = './csv'
-  filename = 'grid_10000points_shift.csv'
+  filename = 'grid_22500points_shift.csv'
+  [row, col] = [150, 150]
+  # filename = 'grid_10000points_shift.csv'
+  # [row, col] = [100, 100]
   # filename = 'grid_2500points_shift.csv'
-  [row, col] = [100, 100]
+  # filename = 'grid_400points_shift.csv'
+  # [row, col] = [20, 20]
   # filename = 'grid_400points.csv'
   # [row, col] = [20, 20]
   # filename = 'IzuOshima10m.csv'
