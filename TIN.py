@@ -108,8 +108,8 @@ def grid_to_TIN(df_p: pd.DataFrame, row=50, col=50, x_step=1, y_step=1, max_erro
     os.makedirs(output_path)
   triangles = delaunay_triangulation(points, plot=True, output_name=f'{output_path}/TIN', return_triangles=True)
   triangles = np.array(triangles[0])
-  np.savetxt(f'{output_path}/TIN_triangles.csv', triangles, fmt='%d')
-  np.savetxt(f'{output_path}/TIN_points.csv', points, fmt='%f')
+  np.savetxt(f'{output_path}/TIN_triangles.csv', triangles, fmt='%d', delimiter=',')
+  np.savetxt(f'{output_path}/TIN_points.csv', points, fmt='%f', delimiter=',')
 
 
 def get_neighbor_points(reference_points: list, triangles: np.ndarray, neighbor_points_index: list, depth: int):
@@ -137,12 +137,13 @@ if __name__ == '__main__':
   # [row, col] = [100, 100]
   # filename = 'grid_2500points_shift.csv'
   # [row, col] = [50, 50]
-  # filename = 'grid_400points_shift.csv'
-  # [row, col] = [20, 20]
-  filename = '/DEM/IzuOshima10m_sorted_xy.csv'
-  [row, col] = [1094, 914]
-  x_step, y_step = 10.16, 12.33
-  max_error = 1.0
+  filename = 'grid_400points_shift.csv'
+  [row, col] = [20, 20]
+  x_step, y_step = 1.0, 1.1
+  # filename = '/DEM/IzuOshima10m_sorted_xy.csv'
+  # [row, col] = [1094, 914]
+  # x_step, y_step = 10.16, 12.33
+  max_error = 0.1
   output_name = filename.split('.')[0]
   df_p = pd.read_csv(f'{folder}/{filename}')
   grid_to_TIN(df_p, row=row, col=col, x_step=x_step, y_step=y_step, max_error=max_error, output_name=output_name)
