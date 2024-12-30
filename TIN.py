@@ -195,6 +195,8 @@ def grid_to_TIN_4(df_p: pd.DataFrame, row=50, col=50, x_step=1, y_step=1, max_er
   error = np.full(p_amount, np.inf) # 誤差を格納するためのリスト
   points = df_p[['x', 'y', 'h']].to_numpy() # 頂点情報をndarrayに変換
   points_reshape = np.reshape(points, (row, col, 3)) # 3次元配列に変換
+  # 削除した点の数
+  del_amount = 0
 
   # s0 = s1 = s2 = s3 = t0 = 0.0
 
@@ -220,6 +222,9 @@ def grid_to_TIN_4(df_p: pd.DataFrame, row=50, col=50, x_step=1, y_step=1, max_er
     # ============================================================
     # print(error.min())
     if (error.min() > max_error): break
+    del_amount += 1
+    if del_amount % 1000 == 0:
+      print(del_amount)
 
     # ============================================================
     # ステップ 3: 削除する点に隣接する点の誤差を初期化して削除
@@ -282,7 +287,7 @@ def grid_to_TIN_4(df_p: pd.DataFrame, row=50, col=50, x_step=1, y_step=1, max_er
   # 出力等
   # ============================================================
   # output用のフォルダをなければ作成
-  output_path = f'./output/{output_name}/{max_error}_3_test'
+  output_path = f'./output/{output_name}/{max_error}'
   if not os.path.exists(output_path):
     os.makedirs(output_path)
   triangles = delaunay_triangulation(points, plot=True, output_name=f'{output_path}/TIN', return_triangles=True)
@@ -310,16 +315,19 @@ if __name__ == '__main__':
   folder = './csv'
   # filename = 'grid_1000000points_shift.csv'
   # [row, col] = [1000, 1000]
-  filename = 'grid_22500points_shift.csv'
-  [row, col] = [150, 150]
+  # filename = 'grid_22500points_shift.csv'
+  # [row, col] = [150, 150]
   # filename = 'grid_10000points_shift.csv'
   # [row, col] = [100, 100]
   # filename = 'grid_2500points_shift.csv'
   # [row, col] = [50, 50]
   # filename = 'grid_400points_shift.csv'
   # [row, col] = [20, 20]
-  max_error = 0.1
+  filename = '/DEM/IzuOshima10m_sorted_xy.csv'
+  [row, col] = [1094, 914]
+  x_step, y_step = 10.16, 12.33
+  max_error = 1.0
   output_name = filename.split('.')[0]
   df_p = pd.read_csv(f'{folder}/{filename}')
   # grid_to_TIN_3(df_p, row=row, col=col, x_step=1, y_step=1.1, max_error=max_error, output_name=output_name)
-  grid_to_TIN_4(df_p, row=row, col=col, x_step=1, y_step=1.1, max_error=max_error, output_name=output_name)
+  grid_to_TIN_4(df_p, row=row, col=col, x_step=x_step, y_step=y_step, max_error=max_error, output_name=output_name)
