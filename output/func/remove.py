@@ -15,9 +15,10 @@ def remove_sea(path, filenames):
   
   # output_p = p[extract_p_indices]
   p[del_p_indices] = [np.nan, np.nan, np.nan]
-  output_p = p
+  output_p = pd.DataFrame(p, columns=['x', 'y', 'h'])
   output_t = t[t_indices]
-  np.savetxt(f'{path}/points.csv', output_p, delimiter=',', fmt='%f')
+
+  output_p.to_csv(f'{path}/points.csv', index=False, na_rep='nan')
   np.savetxt(f'{path}/triangles.csv', output_t, delimiter=',', fmt='%d')
 
   p_quantity = len(p) - len(del_p_indices)
