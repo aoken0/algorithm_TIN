@@ -9,7 +9,7 @@ def save_info(path, p_quantity, e_quantity):
       f.write(f'{t}: {i}\n')
 
 if __name__ == '__main__':
-  path = "./output/DEM/IzuOshima10m_sorted_xy/2.0"
+  path = "./output/DEM/IzuOshima10m_sorted_xy/1.0"
   filenames = ['TIN_points.csv', 'TIN_triangles.csv']
   p_quantity = remove_sea(path, filenames)
   e_quantity = extract_edge(path, filenames[1])
