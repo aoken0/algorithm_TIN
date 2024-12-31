@@ -13,7 +13,6 @@ def remove_sea(path, filenames):
 
   t_indices = ~np.any(np.isin(t, del_p_indices), axis=1)
   
-  # output_p = p[extract_p_indices]
   p[del_p_indices] = [np.nan, np.nan, np.nan]
   output_p = pd.DataFrame(p, columns=['x', 'y', 'h'])
   output_t = t[t_indices]
