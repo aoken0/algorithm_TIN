@@ -1,2 +1,13 @@
+# cache
+__pycache__
+
+# output
+output/*
+!output/func
+
 /test*
 *.csv
+*.png
+*.svg
+
+*test*
