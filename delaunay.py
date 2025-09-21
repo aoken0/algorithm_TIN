@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from scipy.spatial import Delaunay
 
-def delaunay_triangulation(p_all: pd.DataFrame | np.ndarray, p_base=None, p_num=None, plot=False, return_height=False, return_adjacent_points=False, output_name=None, show_num=False, return_triangles=False):
+def delaunay_triangulation(p_all: pd.DataFrame | np.ndarray, p_base=None, p_num=None, plot=False, return_height=False, output_name=None, show_num=False, return_triangles=False):
   # output_dir = './output'
   height = None
   points = None
@@ -31,7 +31,7 @@ def delaunay_triangulation(p_all: pd.DataFrame | np.ndarray, p_base=None, p_num=
       if p == -1:
         height = 2 ** 10
       else:
-        height = get_height(triangle_points=triangle_points, p_base=p_base)
+        height = get_height(triangle_points, p_base)
 
   # plotモードのとき
   if plot:
@@ -41,23 +41,11 @@ def delaunay_triangulation(p_all: pd.DataFrame | np.ndarray, p_base=None, p_num=
 
   if return_height:
     return_val.append(height)
-  
-  if return_adjacent_points:
-    return_val.append(get_adjacent_points(tri, p_num))
 
   if return_triangles:
     return_val.append(tri.simplices)
   
   return return_val
-
-
-def get_adjacent_points(tri: Delaunay, p_base):
-  points = [triangle for triangle in tri.simplices if p_base in triangle]
-  points = np.array(points)
-  points = points.flatten()
-  points = np.unique(points)
-  points = points[points != p_base]
-  return points
 
 
 def plot_network(points, heights, triangles, p_base=None, output_name=None, show_num=False):
@@ -76,11 +64,10 @@ def plot_network(points, heights, triangles, p_base=None, output_name=None, show
 
   # 頂点番号を表示
   if show_num:
-    for i, row in p_all.iterrows():
-      id, x, y = row['id'], row['x'], row['y']
-      id = int(id)
+    for id_, x, y in zip(p_all['id'], p_all['x'], p_all['y']):
+      id = int(id_)
       plt.text(x, y, f"{id}", color="blue", fontsize=10)
-  
+
   if p_base is not None:
     plt.plot(p_base[0], p_base[1], 'ro')
 
@@ -124,7 +111,7 @@ def get_height(triangle_points, p_base):
   return height
 
 def get_vector(point1, point2):
-  return point1 - point2
+  return point2 - point1
 
 
 if __name__ == '__main__':

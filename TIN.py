@@ -100,6 +100,7 @@ def grid_to_TIN(df_p: pd.DataFrame, row=50, col=50, x_step=1, y_step=1, max_erro
     error[del_id] = np.inf
     # s3 += time.time() - s
     # s5 += time.time() - tt
+    return
 
   print('fin')
   print(time.time() - start, 's')
