@@ -61,12 +61,6 @@ def plot_network(points, heights, triangles, p_target=None, output_name=None, sh
   sc = plt.scatter(points[:, 0], points[:, 1], c=heights, cmap='viridis', marker='o', s=50)
   plt.colorbar(sc)
 
-  # 頂点番号を表示
-  if show_num:
-    for id_, x, y in zip(p_all['id'], p_all['x'], p_all['y']):
-      id = int(id_)
-      plt.text(x, y, f"{id}", color="blue", fontsize=10)
-
   if p_target is not None:
     plt.plot(p_target[0], p_target[1], 'ro')
 
