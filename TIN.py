@@ -14,12 +14,12 @@ def grid_to_TIN(df_p: pd.DataFrame, row=50, col=50, x_step=1, y_step=1, max_erro
   # 削除した点の数
   del_amount = 0
 
-  # s0 = s1 = s2 = s3 = s4 = s5 = 0
+  s0 = s1 = s2 = s3 = s4 = 0
 
   # ============================================================
   # ステップ 1: すべての点について標高誤差を計算
   # ============================================================
-  # tt = time.time()
+  tt = time.time()
   for i in range(p_all.shape[0]):
     point = p_all[i, :2]
     [x, y] = point[0:2]
@@ -30,31 +30,30 @@ def grid_to_TIN(df_p: pd.DataFrame, row=50, col=50, x_step=1, y_step=1, max_erro
     tmp_points = tmp_points[np.any(tmp_points != p_all[i, :], axis=1), :]
     height = delaunay_triangulation(tmp_points, point, return_height=True)
     error[i] = abs(p_all[:, 2][i] - height)
-  # s0 += time.time() - tt
+  s0 += time.time() - tt
 
+  tt = time.time()
   # ドローネ分割を行い、すべての三角形を取得
   triangle_all: np.ndarray = delaunay_triangulation(p_all, return_triangles=True)[0]
   # 三角形の情報から隣接リストを作成
   adjacency = build_adjacency_list(triangle_all, p_all.shape[0])
-
-  # tt = time.time()
-  # s1 += time.time() - tt
+  s1 += time.time() - tt
 
   while 1:
     # ============================================================
     # ステップ 2: 最小誤差が設定した最大誤差を超えたら終了
     # ============================================================
     if (error.min() > max_error): break
-    del_amount += 1
-    if del_amount % 1000 == 0:
-      print(del_amount)
+    # del_amount += 1
+    # if del_amount % 1000 == 0:
+    #   print(del_amount)
     # 削除点の配列番号
     del_id = error.argmin()
 
     # ============================================================
     # ステップ 3 ~ 4: 削除する点に隣接する点の誤差を再計算
     # ============================================================
-    # tt = time.time()
+    tt = time.time()
     # 削除点から3つ先までの点を取得する
     neighbor_points = get_neighbor_points(del_id, adjacency, depth=[1,2,3])
     # print(np.sort(neighbor_point_indexes[0]),np.sort(neighbor_point_indexes[1]),np.sort(neighbor_point_indexes[2]))
@@ -63,9 +62,9 @@ def grid_to_TIN(df_p: pd.DataFrame, row=50, col=50, x_step=1, y_step=1, max_erro
     p_neighbor = neighbor_points[2]
     # neighbor_point_indexes_old = get_neighbor_points_old(del_id, triangle_all, depth=3)
     # print(np.sort(neighbor_point_indexes_old[0]),np.sort(neighbor_point_indexes_old[1]),np.sort(neighbor_point_indexes_old[2]))
-    # s2 += time.time() - tt
+    s2 += time.time() - tt
 
-    # tt = time.time()
+    tt = time.time()
     # 削除点に隣接する点全てにおいて削除して誤差計算する
     for i in p_adjacent:
       p_del = p_all[i, :2] # 隣接点の抽出(削除して誤差を求める対象点)
@@ -73,12 +72,12 @@ def grid_to_TIN(df_p: pd.DataFrame, row=50, col=50, x_step=1, y_step=1, max_erro
       p_tmp_neighbor = p_all[p_tmp]
       height = delaunay_triangulation(p_tmp_neighbor, p_del, return_height=True)
       error[i] = abs(p_all[:, 2][i] - height)
-    # s3 += time.time() - tt
+    s3 += time.time() - tt
 
     # ============================================================
     # 削除点を除いたdelaunayネットワークを再構築
     # ============================================================
-    # tt = time.time()
+    tt = time.time()
     # 深さ2の隣接点までを用いて計算する
     # 取得したネットワークの点番号は0から振られている => それをもとに戻す処理を行う
     new_triangle_local = delaunay_triangulation(p_all[p_neighbor_depth2], return_triangles=True)[0]
@@ -92,19 +91,15 @@ def grid_to_TIN(df_p: pd.DataFrame, row=50, col=50, x_step=1, y_step=1, max_erro
     triangle_all = np.concatenate([filtered_triangle, filtered_new_triangle], 0)
     # 隣接リストを更新
     adjacency = update_adjacency_list(adjacency, del_id, filtered_new_triangle)
-    # s4 += time.time() - tt
+    s4 += time.time() - tt
 
-    # tt = time.time()
     # 削除点に関する要素を無限大に(あとではじく)
     p_all[del_id] = [np.inf, np.inf, np.inf]
     error[del_id] = np.inf
-    # s3 += time.time() - s
-    # s5 += time.time() - tt
-    return
 
   print('fin')
   print(time.time() - start, 's')
-  # print(s0, s1, s2, s3, s4, s5)
+  print(s0, s1, s2, s3, s4)
 
   # ============================================================
   # 出力等
@@ -173,14 +168,16 @@ if __name__ == '__main__':
   folder = './csv'
   # filename = 'test/grid_1000000points_shift.csv'
   # [row, col] = [1000, 1000]
+  filename = 'test/grid_90000points_shift.csv'
+  [row, col] = [300, 300]
   # filename = 'test/grid_22500points_shift.csv'
   # [row, col] = [150, 150]
   # filename = 'test/grid_10000points_shift.csv'
   # [row, col] = [100, 100]
   # filename = 'test/grid_2500points_shift.csv'
   # [row, col] = [50, 50]
-  filename = 'test/grid_400points_shift.csv'
-  [row, col] = [20, 20]
+  # filename = 'test/grid_400points_shift.csv'
+  # [row, col] = [20, 20]
   x_step, y_step = 1.0, 1.1
   # filename = '/DEM/IzuOshima10m_sorted_xy.csv'
   # [row, col] = [1094, 914]

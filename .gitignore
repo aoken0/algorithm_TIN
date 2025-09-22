@@ -11,3 +11,6 @@ output/*
 *.svg
 
 *test*
+
+# c
+c/*.exe
