@@ -86,44 +86,6 @@ def plot_network(points, heights, triangles, p_target=None, output_name=None, sh
     plt.savefig(f'{output_name}.png')
   plt.show()
 
-
-
-def get_height(triangle_points, p_target):
-  vector = np.zeros((2, 2)) # ベクトルを格納する用
-  
-  # 三角形の全体の面積
-  vector[0] = get_vector(triangle_points[0][0:2], triangle_points[1][0:2])
-  vector[1] = get_vector(triangle_points[0][0:2], triangle_points[2][0:2])
-  full_area = 0.5 * np.cross(vector[0], vector[1])
-
-  # 内包された点と他2点から成る三角形の面積を3通り求める
-  a0 = a1 = a2 = 0
-  # 点0, 1 -> a2
-  vector[0] = get_vector(triangle_points[0][0:2], triangle_points[1][0:2])
-  vector[1] = get_vector(triangle_points[0][0:2], p_target)
-  t_area = 0.5 * np.cross(vector[0], vector[1])
-  a2 = t_area / full_area
-
-  # 点1, 2 -> a0
-  vector[0] = get_vector(triangle_points[1][0:2], triangle_points[2][0:2])
-  vector[1] = get_vector(triangle_points[1][0:2], p_target)
-  t_area = 0.5 * np.cross(vector[0], vector[1])
-  a0 = t_area / full_area
-
-  # 点2, 0 -> a1
-  vector[0] = get_vector(triangle_points[2][0:2], triangle_points[0][0:2])
-  vector[1] = get_vector(triangle_points[2][0:2], p_target)
-  t_area = 0.5 * np.cross(vector[0], vector[1])
-  a1 = t_area / full_area
-
-  height = a0 * triangle_points[0][2] + a1 * triangle_points[1][2] + a2 * triangle_points[2][2]
-
-  return height
-
-def get_vector(point1, point2):
-  return point2 - point1
-
-
 if __name__ == '__main__':
   p_all = pd.read_csv('./csv/grid_400points.csv')
   # print(p_all)
