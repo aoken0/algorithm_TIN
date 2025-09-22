@@ -9,6 +9,7 @@ output/*
 *.csv
 *.png
 *.svg
+*tmp*
 
 *test*
 

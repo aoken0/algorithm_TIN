@@ -35,16 +35,3 @@ double get_height(const double triangle_points[][3], double *p_target) {
 
   return a0 * triangle_points[0][2] + a1 * triangle_points[1][2] + a2 * triangle_points[2][2];
 }
-
-// int main(void) {
-//   double triangle_points[3][3] = {
-//     {217.0, 0.0, 4.35910742},
-//     {219.0, 0.0, 3.7518056},
-//     {218.0, 1.1, 4.27026309}
-//   };
-//   double p_target[2] = {218, 0.0};
-
-//   printf("%f", get_height(triangle_points, p_target));
-//   // 4.055456511157113
-//   return 0;
-// }

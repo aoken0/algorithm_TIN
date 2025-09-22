@@ -1,5 +1,5 @@
 from matplotlib import pyplot as plt
-from delaunay import delaunay_triangulation, plot_network
+from delaunay import delaunay_triangulation
 import pandas as pd
 import numpy as np
 import time
@@ -56,12 +56,9 @@ def grid_to_TIN(df_p: pd.DataFrame, row=50, col=50, x_step=1, y_step=1, max_erro
     tt = time.time()
     # 削除点から3つ先までの点を取得する
     neighbor_points = get_neighbor_points(del_id, adjacency, depth=[1,2,3])
-    # print(np.sort(neighbor_point_indexes[0]),np.sort(neighbor_point_indexes[1]),np.sort(neighbor_point_indexes[2]))
     p_adjacent = neighbor_points[0]
     p_neighbor_depth2 = neighbor_points[1]
     p_neighbor = neighbor_points[2]
-    # neighbor_point_indexes_old = get_neighbor_points_old(del_id, triangle_all, depth=3)
-    # print(np.sort(neighbor_point_indexes_old[0]),np.sort(neighbor_point_indexes_old[1]),np.sort(neighbor_point_indexes_old[2]))
     s2 += time.time() - tt
 
     tt = time.time()
@@ -111,7 +108,6 @@ def grid_to_TIN(df_p: pd.DataFrame, row=50, col=50, x_step=1, y_step=1, max_erro
   p = p_all[~np.all(np.isin(p_all, np.inf), axis=1)]
   triangles = delaunay_triangulation(p, plot=True, output_name=f'{output_path}/TIN', return_triangles=True)
   triangles = np.array(triangles[0])
-  # plot_network(p_all[:, :2], p_all[:, 2], triangle_all, output_name=f'{output_path}/TIN')
   np.savetxt(f'{output_path}/TIN_triangles.csv', triangles, fmt='%d', delimiter=',')
   np.savetxt(f'{output_path}/TIN_points.csv', p, fmt='%f', delimiter=',') 
 

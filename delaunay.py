@@ -10,21 +10,11 @@ c_lib.get_height.argtypes = [
 ]
 c_lib.get_height.restype = ctypes.c_double
 
-def delaunay_triangulation(p_all: pd.DataFrame | np.ndarray, p_target: np.ndarray=None, p_num=None, plot=False, return_height=False, output_name=None, show_num=False, return_triangles=False):
-  # output_dir = './output'
+def delaunay_triangulation(p_all: np.ndarray, p_target: np.ndarray=None, plot=False, return_height=False, output_name=None, show_num=False, return_triangles=False):
   height = None
-  points = None
-  data = None
-  heights = None
-
-  if (type(p_all) == pd.DataFrame):
-    points = p_all[['x', 'y']].to_numpy()
-    data = p_all[['x', 'y', 'h']].to_numpy()
-    heights = p_all['h'].to_numpy()
-  elif (type(p_all) == np.ndarray):
-    points = p_all[:, :2]
-    data = p_all
-    heights = p_all[:, 2]
+  points = p_all[:, :2]
+  data = p_all
+  heights = p_all[:, 2]
 
   # Delaunay 三角形分割を計算
   tri = Delaunay(points)
@@ -32,7 +22,6 @@ def delaunay_triangulation(p_all: pd.DataFrame | np.ndarray, p_target: np.ndarra
   # 点が指定されていたらどこに内包されているか
   if p_target is not None:
     p = tri.find_simplex(p_target)
-    # print(tri.simplices[p]) # 内包されている三角形の頂点番号
     triangle_points = data[tri.simplices[p]]
     if return_height:
       if p == -1:
@@ -87,7 +76,4 @@ def plot_network(points, heights, triangles, p_target=None, output_name=None, sh
   plt.show()
 
 if __name__ == '__main__':
-  p_all = pd.read_csv('./csv/grid_400points.csv')
-  # print(p_all)
-  p_target = [50, 50]
-  delaunay_triangulation(p_all, plot=True)
+  pass
